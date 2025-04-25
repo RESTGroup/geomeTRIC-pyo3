@@ -1,9 +1,7 @@
 //! Interface that electronic structure codes should implement.
 
-use std::{
-    mem::transmute,
-    sync::{Arc, Mutex},
-};
+use std::mem::transmute;
+use std::sync::{Arc, Mutex};
 
 use pyo3::prelude::*;
 
@@ -36,26 +34,37 @@ pub trait GeomDriverAPI: Send {
     ///
     /// A `GradOutput` struct containing the energy and gradient of the system.
     fn calc_new(&mut self, coords: &[f64], dirname: &str) -> GradOutput;
-
-    fn as_any(&self) -> &dyn std::any::Any;
-    fn as_any_mut(&mut self) -> &mut dyn std::any::Any;
 }
 
 /// Python wrapper for the `GeomDriverAPI` trait implementations.
 ///
 /// `GeomDriverAPI` is defined as rust trait, which is not directly usable in
 /// Python. This makes the glue between the rust trait and the python class.
+///
+/// # Safety
+///
+/// This struct is marked as `unsafe` because it uses `transmute` to convert
+/// local lifetime to static lifetime.
+///
+/// If your class (to be implemented with trait `GeomDriverAPI`) have lifetime
+/// parameters, then this lifetime will be transmuted to static lifetime when it
+/// is converted to python object. As long as you don't disturb the lifetime of
+/// reference, this transmute should be safe.
 #[pyclass]
 #[derive(Clone)]
 pub struct PyGeomDriver {
-    pub pointer: Arc<Mutex<Box<dyn GeomDriverAPI>>>,
+    pub pointer: Arc<Mutex<dyn GeomDriverAPI>>,
 }
 
 impl<T> From<T> for PyGeomDriver
 where
-    T: GeomDriverAPI + 'static,
+    T: GeomDriverAPI,
 {
     fn from(driver: T) -> Self {
-        PyGeomDriver { pointer: Arc::new(Mutex::new(Box::new(driver))) }
+        let a: Arc<Mutex<dyn GeomDriverAPI>> = Arc::new(Mutex::new(driver));
+        // Safety not checked, and should be provided by the caller.
+        // This will convert local lifetime (of `T`) to static lifetime (`'static`) for
+        // python calls.
+        unsafe { transmute(a) }
     }
 }
