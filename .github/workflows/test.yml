@@ -1,0 +1,20 @@
+name: test-dftd3
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-from-miniconda:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+      - name: run tests directly
+        run: |
+          conda install geometric -c conda-forge
+          ls /usr/share/miniconda/lib
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/share/miniconda/lib
+          cargo test --examples
