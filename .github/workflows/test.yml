@@ -14,10 +14,8 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
       - name: run tests directly
         run: |
-          conda init
-          source $HOME/.bashrc
-          conda activate
+          conda activate test
           conda install geometric -c conda-forge
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/share/miniconda/lib
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/share/miniconda/envs/test/lib
           echo `which python`
           cargo test --examples
