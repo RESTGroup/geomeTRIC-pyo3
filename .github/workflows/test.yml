@@ -15,6 +15,7 @@ jobs:
       - name: run tests directly
         run: |
           conda init
+          source $HOME/.bashrc
           conda activate
           conda install geometric -c conda-forge
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/share/miniconda/lib
