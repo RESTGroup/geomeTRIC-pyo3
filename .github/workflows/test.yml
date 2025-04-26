@@ -15,7 +15,6 @@ jobs:
         with:
           activate-environment: test
           python-version: "3.10"
-          mamba-version: "*"
       - name: run tests directly
         run: |
           conda env list
