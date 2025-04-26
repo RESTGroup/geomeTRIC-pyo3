@@ -1,3 +1,5 @@
+#![doc = include_str!("readme.md")]
+
 pub mod prelude;
 
 pub mod engine;

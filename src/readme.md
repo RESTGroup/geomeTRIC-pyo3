@@ -33,6 +33,9 @@ otherwise, you need to enable `auto-initialize` cargo feature in PyO3.
 
 ### Step 1: Wrap your electronic structure energy/gradient
 
+**Related APIs**:
+- [`GeomDriverAPI`](crate::prelude::GeomDriverAPI)
+
 Suppose struct `Model` (in rust side) evaluates the energy and gradient, then you may probably use the following code, to wrap and pass this reference to python side.
 
 ```rust,ignore
@@ -53,6 +56,9 @@ impl GeomDriverAPI for ModelDriver<'_> {
 
 ### Step 2: Prepare molecule object
 
+**Related APIs**:
+- [`init_pyo3_molecule`](crate::prelude::init_pyo3_molecule)
+
 Define the molecule instance. The following code gives water molecule:
 ```
 O   0.0  0.3  0.0
@@ -68,6 +74,9 @@ let molecule = init_pyo3_molecule(&elem, &xyzs)?;
 ```
 
 ### Step 3: Prepare optimization parameters
+
+**Related APIs**:
+- [`tomlstr2py`](crate::prelude::tomlstr2py)
 
 You can specify parameters for optimizer in toml format by string, and parsed into python recognizable dictionary by `tomlstr2py` function. If you wish to give toml value directly, then use `toml2py` function.
 
@@ -92,6 +101,13 @@ let input = None;
 
 ### Step 4: Prepare engine and driver
 
+**Related APIs**:
+- [`get_pyo3_engine_cls`](crate::prelude::get_pyo3_engine_cls)
+- [`PyGeomDriver`](crate::prelude::PyGeomDriver)
+
+**Related APIs that is not intended for users**:
+- [`EngineMixin`](crate::engine::EngineMixin)
+
 `pyo3_engine_cls`: The class `PyO3Engine` at python side. It is generated dynamically. As user, you just only execute `get_pyo3_engine_cls()` to get the class.
 
 `driver`: Wrap your model into `ModelDriver` struct to rust side, then `PyGeomDriver` to python side.
@@ -103,6 +119,9 @@ let driver: PyGeomDriver = driver.into();
 ```
 
 ### Step 5: Actual optimization (or transition, etc.)
+
+**Related APIs**:
+- [`run_optimization`](crate::prelude::run_optimization)
 
 The following three lines will perform the optimization.
 1. Create a new instance of `PyO3Engine` class.
