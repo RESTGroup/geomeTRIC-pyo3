@@ -14,9 +14,9 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: test
+          python-version: "3.10"
       - name: run tests directly
         run: |
-          conda activate test
           conda install geometric -c conda-forge
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/share/miniconda/envs/test/lib
           echo `which python`
