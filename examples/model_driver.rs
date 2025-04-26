@@ -3,6 +3,8 @@
 
 use geometric_pyo3::engine::*;
 use geometric_pyo3::interface::*;
+use geometric_pyo3::optimize::*;
+use geometric_pyo3::util::*;
 use pyo3::prelude::*;
 
 pub struct Model {
@@ -101,7 +103,18 @@ fn main_test() -> PyResult<()> {
     let molecule = init_pyo3_molecule(&elem, &xyzs)?;
     println!("Molecule: {:?}", molecule);
 
+    let optimizer_params = r#"
+    transition           = true    # evaluate transition state instead of local minimum
+    convergence_energy   = 1.0e-8  # Eh
+    convergence_grms     = 1.0e-6  # Eh/Bohr
+    convergence_gmax     = 1.0e-6  # Eh/Bohr
+    convergence_drms     = 1.0e-4  # Angstrom
+    convergence_dmax     = 1.0e-4  # Angstrom
+    "#;
+    let params = tomlstr2py(optimizer_params)?;
+    let input = None;
     let pyo3_engine_cls = get_pyo3_engine_cls()?;
+
     Python::with_gil(|py| -> PyResult<()> {
         let mut model = Model::new();
         let driver = ModelDriver { model: &mut model };
@@ -109,8 +122,7 @@ fn main_test() -> PyResult<()> {
         let custom_engine = pyo3_engine_cls.call1(py, (molecule,))?;
         custom_engine.call_method1(py, "set_driver", (driver.clone(),))?;
         println!("Custom Engine: {:?}", custom_engine);
-
-        let res = run_optimization(custom_engine)?;
+        let res = run_optimization(custom_engine, &params, input)?;
         println!("Optimization Result: {:?}", res);
 
         // retrive coordinates from the result

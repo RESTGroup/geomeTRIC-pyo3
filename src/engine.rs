@@ -2,7 +2,6 @@ use crate::interface::PyGeomDriver;
 use pyo3::PyTypeInfo;
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
-use tempfile::NamedTempFile;
 
 /// Mixin class to be mult-inherited together with `geometric.engine.Engine`.
 #[pyclass(subclass)]
@@ -106,26 +105,5 @@ pub fn init_pyo3_molecule(elem: &[&str], xyzs: &[Vec<f64>]) -> PyResult<PyObject
         molecule_instance.setattr("elem", elem)?;
         molecule_instance.setattr("xyzs", xyzs)?;
         Ok(molecule_instance.into())
-    })
-}
-
-pub fn run_optimization(custom_engine: PyObject) -> PyResult<PyObject> {
-    Python::with_gil(|py| {
-        // Import the geometric Python module
-        let run_optimizer = py.import("geometric.optimize")?.getattr("run_optimizer")?;
-
-        // Create a temporary file
-        let tmpfile = NamedTempFile::new()?;
-        let tmp_path = tmpfile.path().to_str().unwrap();
-
-        // Call run_optimizer with the specified parameters
-        let kwargs = PyDict::new(py);
-        kwargs.set_item("customengine", custom_engine)?;
-        kwargs.set_item("check", 1)?;
-        kwargs.set_item("input", tmp_path)?;
-
-        let result = run_optimizer.call((), Some(&kwargs))?;
-
-        Ok(result.into())
     })
 }

@@ -4,8 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-pyo3 = { version = "0.24" }
+pyo3 = { version = "0.24.2" }
 tempfile = { version = "3.19" }
+toml = { version = "0.8" }
 
 [package.metadata.docs.rs]
 cargo-args = ["-Zunstable-options", "-Zrustdoc-scrape-examples"]

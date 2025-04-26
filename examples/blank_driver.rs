@@ -1,5 +1,7 @@
 use geometric_pyo3::engine::*;
 use geometric_pyo3::interface::*;
+use geometric_pyo3::optimize::*;
+use geometric_pyo3::util::*;
 use pyo3::prelude::*;
 
 pub struct BlankDriver {}
@@ -19,20 +21,27 @@ fn main_test() -> PyResult<()> {
     let molecule = init_pyo3_molecule(&elem, &xyzs)?;
     println!("Molecule: {:?}", molecule);
 
+    let optimizer_params = r#"
+        convergence_energy   = 1.0e-8  # Eh
+        convergence_grms     = 1.0e-6  # Eh/Bohr
+        convergence_gmax     = 1.0e-6  # Eh/Bohr
+        convergence_drms     = 1.0e-4  # Angstrom
+        convergence_dmax     = 1.0e-4  # Angstrom
+    "#;
+    let params = tomlstr2py(optimizer_params)?;
+    let input = Some("./tmp_input.tmp");
     let pyo3_engine_cls = get_pyo3_engine_cls()?;
+
     Python::with_gil(|py| -> PyResult<()> {
         let driver = BlankDriver {};
         let driver: PyGeomDriver = driver.into();
         let custom_engine = pyo3_engine_cls.call1(py, (molecule,))?;
         custom_engine.call_method1(py, "set_driver", (driver,))?;
         println!("Custom Engine: {:?}", custom_engine);
-
-        let res = run_optimization(custom_engine)?;
+        let res = run_optimization(custom_engine, &params, input)?;
         println!("Optimization Result: {:?}", res);
         Ok(())
-    })?;
-
-    Ok(())
+    })
 }
 
 #[test]
