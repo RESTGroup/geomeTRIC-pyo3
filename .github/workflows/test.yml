@@ -21,4 +21,6 @@ jobs:
           export LD_LIBRARY_PATH=/usr/share/miniconda/envs/test/lib:$LD_LIBRARY_PATH
           export PATH=/usr/share/miniconda/envs/test/bin:$PATH
           echo `which python`
+          python -c "import sys; print(sys.version)"
+          python -c "import geometric; print(geometric.__version__)"
           cargo test --examples
