@@ -18,7 +18,7 @@ jobs:
       - name: run tests directly
         run: |
           conda install geometric -c conda-forge
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/share/miniconda/envs/test/lib
+          export LD_LIBRARY_PATH=/usr/share/miniconda/envs/test/lib:$LD_LIBRARY_PATH
           export PATH=/usr/share/miniconda/envs/test/bin:$PATH
           echo `which python`
           cargo test --examples
