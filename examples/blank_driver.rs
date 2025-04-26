@@ -1,3 +1,4 @@
+#![allow(clippy::uninlined_format_args)]
 use geometric_pyo3::prelude::*;
 use pyo3::prelude::*;
 
