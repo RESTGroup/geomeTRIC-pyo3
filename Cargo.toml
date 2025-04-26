@@ -1,7 +1,14 @@
 [package]
 name = "geometric-pyo3"
+description = "PyO3 (Rust) interface to geomeTRIC (molecular structure geometry optimization program)"
+readme = "readme.md"
+
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+repository = "https://github.com/RESTGroup/geomeTRIC-pyo3"
+keywords = ["chemistry"]
+categories = ["science"]
+license = "APACHE-2.0"
 
 [dependencies]
 pyo3 = { version = "0.24.2" }
