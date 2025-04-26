@@ -4,6 +4,12 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use tempfile::NamedTempFile;
 
+/// Run the optimization using the custom engine and parameters.
+///
+/// - `custom_engine`: The custom engine to use for the optimization.
+/// - `params`: The parameters for the optimization.
+/// - `input`: Optional input file path. If `None`, a temporary file will be
+///   created.
 pub fn run_optimization(
     custom_engine: PyObject,
     params: &Py<PyDict>,

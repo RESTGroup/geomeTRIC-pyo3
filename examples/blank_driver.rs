@@ -1,7 +1,4 @@
-use geometric_pyo3::engine::*;
-use geometric_pyo3::interface::*;
-use geometric_pyo3::optimize::*;
-use geometric_pyo3::util::*;
+use geometric_pyo3::prelude::*;
 use pyo3::prelude::*;
 
 pub struct BlankDriver {}

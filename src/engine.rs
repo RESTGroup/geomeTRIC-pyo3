@@ -1,3 +1,5 @@
+//! Engine corresponds to `geometric.engine.Engine` class in geomeTRIC.
+
 use crate::interface::PyGeomDriver;
 use pyo3::PyTypeInfo;
 use pyo3::prelude::*;
