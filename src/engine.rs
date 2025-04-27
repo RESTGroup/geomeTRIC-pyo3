@@ -1,9 +1,9 @@
 //! Engine corresponds to `geometric.engine.Engine` class in geomeTRIC.
 
 use crate::interface::PyGeomDriver;
-use pyo3::PyTypeInfo;
 use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList};
+use pyo3::PyTypeInfo;
 
 /// Mixin class to be mult-inherited together with `geometric.engine.Engine`.
 #[pyclass(subclass)]
