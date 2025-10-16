@@ -109,3 +109,14 @@ pub fn init_pyo3_molecule(elem: &[&str], xyzs: &[Vec<f64>]) -> PyResult<PyObject
         Ok(molecule_instance.into())
     })
 }
+
+/// Call `geometric.molecule.build_topology` function to build the topology.
+pub fn molecule_build_topology(
+    molecule: &PyObject,
+    kwargs: Option<&Bound<'_, PyDict>>,
+) -> PyResult<()> {
+    Python::with_gil(|py| {
+        molecule.call_method(py, "build_topology", (), kwargs)?;
+        Ok(())
+    })
+}
